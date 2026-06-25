@@ -1,54 +1,88 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PROFILES } from '@/constants';
 
-if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+interface Props {
+  onSelect: (side: string) => void;
+}
 
-export default function ProfileSelect() {
+export default function ProfileSelect({ onSelect }: Props) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!cardsRef.current) return;
+    if (!cardsRef.current || !containerRef.current) return;
+
+    // Fade in the whole screen
+    gsap.fromTo(containerRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.6 }
+    );
+
+    // Animate cards in
     const cards = cardsRef.current.children;
     gsap.fromTo(cards,
-      { opacity: 0, y: 25, scale: 0.9 },
-      { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.5, ease: 'power2.out',
-        scrollTrigger: { trigger: cardsRef.current, start: 'top 85%' },
-      }
+      { opacity: 0, y: 40, scale: 0.85 },
+      { opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.7, delay: 0.3, ease: 'back.out(1.4)' }
     );
   }, []);
 
+  const handleSelect = (id: string) => {
+    if (selected) return;
+    setSelected(id);
+
+    // Animate selected card
+    const cards = cardsRef.current?.children;
+    if (cards) {
+      Array.from(cards).forEach((card, i) => {
+        const profileId = PROFILES[i].id;
+        if (profileId === id) {
+          gsap.to(card, { scale: 1.15, duration: 0.3, ease: 'power2.out' });
+        } else {
+          gsap.to(card, { opacity: 0.2, scale: 0.9, duration: 0.3 });
+        }
+      });
+    }
+
+    setTimeout(() => onSelect(id), 800);
+  };
+
   return (
-    <section className="py-12 px-4" style={{ background: '#141414' }}>
-      {/* Netflix header */}
-      <div className="flex items-center justify-between mb-10">
-        <span className="font-heading text-accent text-lg tracking-[0.15em]">LOVEFLIX</span>
-        <span className="text-[0.7rem] text-dim/60">Oturum Aç</span>
+    <div ref={containerRef} className="min-h-[100svh] flex flex-col items-center justify-center px-6" style={{ background: '#141414' }}>
+      {/* LOVEFLIX logo */}
+      <div className="mb-12">
+        <span className="font-heading text-accent text-3xl tracking-[0.15em]">LOVEFLIX</span>
       </div>
 
-      <h2 className="text-center text-[1.3rem] font-medium text-white mb-2">Kim Katılıyor?</h2>
-      <p className="text-center text-[0.7rem] text-dim/50 mb-8">Profilinizi seçin</p>
+      <h2 className="text-[1.4rem] font-medium text-white mb-2">Kim İzliyor?</h2>
+      <p className="text-[0.72rem] text-dim/40 mb-10">Profilinizi seçin</p>
 
-      <div ref={cardsRef} className="flex justify-center gap-5 mb-8">
+      <div ref={cardsRef} className="grid grid-cols-2 gap-x-8 gap-y-6 mb-10">
         {PROFILES.map((p) => (
-          <div key={p.id} className="flex flex-col items-center w-[68px] cursor-pointer group">
+          <button
+            key={p.id}
+            onClick={() => handleSelect(p.id)}
+            className="flex flex-col items-center gap-2 group"
+          >
             <div
-              className="w-[68px] h-[68px] rounded-md flex items-center justify-center mb-2 transition-all duration-200 group-active:scale-95 border-2 border-transparent group-hover:border-white/30"
+              className={`w-20 h-20 rounded-md flex items-center justify-center transition-all duration-200 ${
+                selected === p.id ? 'ring-[3px] ring-white' : 'ring-0'
+              }`}
               style={{ background: p.color }}
             >
-              <span className="text-[1.7rem]">{p.icon}</span>
+              <span className="text-[2rem]">{p.icon}</span>
             </div>
-            <span className="text-[0.6rem] text-dim/70 group-hover:text-white transition-colors text-center leading-tight">
+            <span className={`text-[0.7rem] transition-colors ${
+              selected === p.id ? 'text-white' : 'text-dim/50 group-hover:text-white'
+            }`}>
               {p.label}
             </span>
-          </div>
+          </button>
         ))}
       </div>
-
-      <div className="section-divider" />
-    </section>
+    </div>
   );
 }
