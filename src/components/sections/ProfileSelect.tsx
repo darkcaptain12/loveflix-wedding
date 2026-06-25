@@ -14,45 +14,41 @@ export default function ProfileSelect() {
     if (!cardsRef.current) return;
     const cards = cardsRef.current.children;
     gsap.fromTo(cards,
-      { opacity: 0, y: 30, scale: 0.9 },
-      {
-        opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.6, ease: 'power2.out',
-        scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' },
+      { opacity: 0, y: 25, scale: 0.9 },
+      { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.5, ease: 'power2.out',
+        scrollTrigger: { trigger: cardsRef.current, start: 'top 85%' },
       }
     );
   }, []);
 
   return (
-    <section className="py-14 px-4" style={{ background: '#141414' }}>
-      <div className="flex items-center justify-between mb-8">
-        <span className="font-heading text-accent text-lg tracking-wider">LOVEFLIX</span>
-        <span className="text-[0.7rem] text-dim">Oturum Aç</span>
+    <section className="py-12 px-4" style={{ background: '#141414' }}>
+      {/* Netflix header */}
+      <div className="flex items-center justify-between mb-10">
+        <span className="font-heading text-accent text-lg tracking-[0.15em]">LOVEFLIX</span>
+        <span className="text-[0.7rem] text-dim/60">Oturum Aç</span>
       </div>
 
-      <h2 className="text-center text-xl font-medium text-white mb-8">Kim Katılıyor?</h2>
+      <h2 className="text-center text-[1.3rem] font-medium text-white mb-2">Kim Katılıyor?</h2>
+      <p className="text-center text-[0.7rem] text-dim/50 mb-8">Profilinizi seçin</p>
 
-      <div ref={cardsRef} className="flex justify-center gap-4 mb-8">
+      <div ref={cardsRef} className="flex justify-center gap-5 mb-8">
         {PROFILES.map((p) => (
-          <div
-            key={p.id}
-            className="flex flex-col items-center w-[72px] cursor-pointer transition-transform active:scale-95 hover:scale-105"
-          >
+          <div key={p.id} className="flex flex-col items-center w-[68px] cursor-pointer group">
             <div
-              className="w-[72px] h-[72px] rounded-lg flex items-center justify-center mb-1.5 transition-shadow hover:shadow-[0_0_20px_rgba(229,9,20,0.3)]"
+              className="w-[68px] h-[68px] rounded-md flex items-center justify-center mb-2 transition-all duration-200 group-active:scale-95 border-2 border-transparent group-hover:border-white/30"
               style={{ background: p.color }}
             >
-              <span className="text-[1.8rem]">{p.icon}</span>
+              <span className="text-[1.7rem]">{p.icon}</span>
             </div>
-            <span className="text-[0.6rem] text-dim leading-tight text-center">{p.label}</span>
+            <span className="text-[0.6rem] text-dim/70 group-hover:text-white transition-colors text-center leading-tight">
+              {p.label}
+            </span>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-center">
-        <button className="nf-btn nf-btn-outline text-[0.7rem] px-5 py-1.5 rounded">
-          Profil Yönetimi
-        </button>
-      </div>
+      <div className="section-divider" />
     </section>
   );
 }
