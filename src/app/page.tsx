@@ -97,10 +97,11 @@ export default function Home() {
             <Episodes />
             <TrailerSection />
             <SeasonFinale />
-            <RsvpSection side={profileSide} />
             <WeddingEvents />
             <Gallery />
             <Footer />
+            {/* Floating RSVP — bottom sheet style */}
+            <RsvpSection side={profileSide} />
           </div>
         )}
       </main>
