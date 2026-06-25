@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
-import { put, head, list } from '@vercel/blob';
+import { readFile, writeFile } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
-const BLOB_NAME = 'rsvp-data.json';
+const DATA_FILE = process.env.VERCEL
+  ? join('/tmp', 'rsvp-data.json')
+  : join(process.cwd(), 'rsvp-data.json');
 
 interface RsvpEntry {
   name: string;
@@ -17,22 +21,16 @@ interface RsvpData {
 
 async function getData(): Promise<RsvpData> {
   try {
-    const blobs = await list({ prefix: BLOB_NAME });
-    if (blobs.blobs.length === 0) return { total: 0, entries: [] };
-
-    const latest = blobs.blobs[blobs.blobs.length - 1];
-    const res = await fetch(latest.url);
-    return await res.json();
+    if (!existsSync(DATA_FILE)) return { total: 0, entries: [] };
+    const raw = await readFile(DATA_FILE, 'utf-8');
+    return JSON.parse(raw);
   } catch {
     return { total: 0, entries: [] };
   }
 }
 
 async function saveData(data: RsvpData) {
-  await put(BLOB_NAME, JSON.stringify(data), {
-    access: 'public',
-    addRandomSuffix: false,
-  });
+  await writeFile(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
 export async function GET() {
