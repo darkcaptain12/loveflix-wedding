@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import CurtainHero from '@/components/sections/CurtainHero';
 import ProfileSelect from '@/components/sections/ProfileSelect';
-import NavBar from '@/components/sections/NavBar';
+// NavBar removed — Netflix mobile has no top nav
 import MovieHero from '@/components/sections/MovieHero';
 import Episodes from '@/components/sections/Episodes';
 import TrailerSection from '@/components/sections/TrailerSection';
@@ -93,7 +93,6 @@ export default function Home() {
         {/* Phase 3: Main content */}
         {phase === 'main' && (
           <div className="main-screen">
-            <NavBar />
             <MovieHero />
             <Episodes />
             <TrailerSection />

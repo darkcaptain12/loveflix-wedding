@@ -26,7 +26,7 @@ export default function MovieHero() {
   }, []);
 
   return (
-    <section ref={ref} id="hero" className="relative" style={{ background: '#141414' }}>
+    <section ref={ref} id="hero" className="relative overflow-hidden" style={{ background: '#141414' }}>
       {/* Full-bleed hero image */}
       <div className="mh-image relative w-full aspect-[3/4] overflow-hidden">
         <img
