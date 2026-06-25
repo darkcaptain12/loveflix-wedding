@@ -75,7 +75,7 @@ export default function SeasonFinale() {
         <div className="space-y-2 mb-5">
           {[
             { icon: '📅', text: '29 Ağustos 2026, Cuma' },
-            { icon: '🕐', text: '20:15' },
+            { icon: '🕐', text: '19:00 Düğün · 20:15 Nikah' },
             { icon: '📍', text: 'Atapark Salon Pırlanta, Nilüfer / Bursa' },
             { icon: '👔', text: 'Dress Code: Elegant' },
           ].map((d, i) => (
